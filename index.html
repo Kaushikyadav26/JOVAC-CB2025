@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Blog</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    .logo {
+      width: 100px;
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    h1 {
+      margin-left: 140px;
+    }
+
+    .form-container {
+      margin-left: 140px;
+      margin-top: 20px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .post {
+      background: #fff;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .post img {
+      width: 100%;
+      border-radius: 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Logo -->
+  <img 
+    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRO7baR1a-8zoES9mD-1fPN_21EbwMndWerQ&s" 
+    alt="My Blog Logo" 
+    class="logo"
+  />
+
+  <!-- Blog Title -->
+  <h1>My  Blog</h1>
+
+  <!-- Blog Post Form -->
+  <div class="form-container">
+    <h2>Add a New Post</h2>
+    <input type="text" id="postTitle" placeholder="Post Title" required />
+    <input type="text" id="postImage" placeholder="Image URL (optional)" />
+    <textarea id="postContent" placeholder="Write your post here..." rows="6" required></textarea>
+    <button onclick="addPost()">Add Post</button>
+  </div>
+
+  <!-- Static Blog Posts -->
+  <div class="post">
+    <h2>HOW AI IS CHANGING EDUCATION</h2>
+    <img src="https://media.istockphoto.com/id/2185214402/photo/efficient-setup-for-work-with-digital-assistant-tool.jpg?s=2048x2048&w=is&k=20&c=CFxSee8OdlxtzrCdGDxxdFOoQPcvimFBCU46fnj9gC0=" alt="AI in education" />
+    <p>Artificial Intelligence (AI) is transforming education in exciting ways. From personalized learning tools to AI tutors, students now have more support than ever.</p>
+    <p>AI can analyze students’ learning styles and adapt lessons to fit their pace and preferences. This ensures no one is left behind. Teachers can also use AI tools to automate tasks like grading and lesson planning, saving time for actual teaching.</p>
+    <p>As the technology grows, AI will help make education more accessible, efficient, and engaging. It’s not a replacement for teachers—but a powerful assistant.</p>
+  </div>
+
+  <div class="post">
+    <h2>IMPORTANCE OF EXCERCISE IN DAILY LIFE</h2>
+    <img src="https://images.pexels.com/photos/868483/pexels-photo-868483.jpeg" alt="Exercise" />
+    <p>Regular exercise plays a vital role in maintaining good health. It helps control weight, reduces the risk of chronic diseases, and boosts mental health.</p>
+    <p>Physical activity improves mood, strengthens muscles and bones, and enhances overall quality of life. Even simple activities like walking, stretching, or yoga can have lasting benefits.</p>
+    <p>Incorporating at least 30 minutes of physical activity into your daily routine can lead to a healthier and happier life.</p>
+  </div>
+
+  <div class="post">
+    <h2>HOW AI IS CHANGING HEALTHCARE</h2>
+    <img src="https://media.istockphoto.com/id/1396801868/photo/a-young-african-american-doctor-works-on-hud-or-graphic-display-in-front-of-her.jpg?s=2048x2048&w=is&k=20&c=JkOxa63cfu5qal9hdsH9qKj-jg0asZUe9ySWQqXoOKU=" alt="AI in healthcare" />
+    <p>Artificial Intelligence is revolutionizing healthcare by improving diagnostics, personalizing treatment, and streamlining hospital operations.</p>
+    <p>AI systems can detect diseases like cancer and diabetes earlier and more accurately than ever. They also help doctors analyze medical records, scan results, and suggest optimal treatments based on patient data.</p>
+    <p>As AI continues to evolve, it will make healthcare more efficient, affordable, and patient-centered.</p>
+  </div>
+
+  <!-- Dynamic Posts Will Appear Here -->
+  <div id="postContainer"></div>
+
+  <!-- JavaScript Section -->
+  <script>
+    // Load posts when page loads
+  window.onload = function () {
+    const savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    savedPosts.forEach(post => {
+      displayPost(post.title, post.image, post.content,false);
+    });
+  };
+
+    function addPost() {
+      const title = document.getElementById("postTitle").value.trim();
+      const image = document.getElementById("postImage").value.trim();
+      const content = document.getElementById("postContent").value.trim();
+
+      if (!title || !content) {
+        alert("Please enter both title and content.");
+        return;
+      }
+      // Save to localStorage
+    const newPost = { title, image, content };
+    let savedPosts = JSON.parse(localStorage.getItem("posts")) || [];
+    savedPosts.push(newPost);
+    localStorage.setItem("posts", JSON.stringify(savedPosts));
+
+    // Display post
+
+      displayPost(title, image, content);
+
+      // Clear inputs
+      document.getElementById("postTitle").value = "";
+      document.getElementById("postImage").value = "";
+      document.getElementById("postContent").value = "";
+    }
+
+    function displayPost(title, image, content, save = true) {
+  const postDiv = document.createElement("div");
+  postDiv.className = "post";
+
+  // Create HTML using backticks
+  let html = `
+    <h2>${title}</h2>
+    ${image ? `<img src="${image}" alt="Blog image" /> `: ""}
+    <p>${content.replace(/\n/g, "</p><p>")}</p>
+    <button onclick="deletePost(this)">Delete</button>
+  `;
+
+  postDiv.innerHTML = html;
+
+  // Add to page
+  const container = document.getElementById("postContainer");
+  container.appendChild(postDiv);
+
+  // Save to localStorage
+  if (save) {
+    const posts = JSON.parse(localStorage.getItem("posts")) || [];
+    posts.push({ title, image, content });
+    localStorage.setItem("posts", JSON.stringify(posts));
+  }
+}
+function deletePost(button) {
+  const postDiv = button.parentElement;
+
+  // Remove from screen
+  postDiv.remove();
+
+  // Remove from localStorage
+  const titleToRemove = postDiv.querySelector("h2").innerText;
+  const posts = JSON.parse(localStorage.getItem("posts")) || [];
+  const updatedPosts = posts.filter(post => post.title !== titleToRemove);
+  localStorage.setItem("posts", JSON.stringify(updatedPosts));
+}
+
+
+  </script>
+
+    
+
+</body>
+</html>
